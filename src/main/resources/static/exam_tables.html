@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>后台管理</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="all,follow">
+    <!-- Bootstrap CSS-->
+    <link rel="stylesheet" href="https://www.jq22.com/jquery/bootstrap-4.2.1.css">
+    <!-- Font Awesome CSS-->
+    <link rel="stylesheet" href="https://www.jq22.com/jquery/font-awesome.4.7.0.css">
+    <!-- Fontastic Custom icon font-->
+    <link rel="stylesheet" href="css/fontastic.css">
+    <!-- Google fonts - Roboto -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+    <!-- jQuery Circle-->
+    <link rel="stylesheet" href="css/grasp_mobile_progress_circle-1.0.0.min.css">
+    <!-- Custom Scrollbar-->
+    <link rel="stylesheet" href="vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">
+    <!-- theme stylesheet-->
+    <link rel="stylesheet" href="css/style.default.css" id="theme-stylesheet">
+    <!-- Custom stylesheet - for your changes-->
+    <link rel="stylesheet" href="css/custom.css">
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="img/favicon.ico">
+    <!-- Tweaks for older IEs--><!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+    <script src="static/js/jquery.js"></script>
+
+    <script>
+        var logout = document.getElementById("admin_logout");
+        var msg = "您确定要退出当前账号吗？";
+        $(function () {
+            $("#admin_logout").on("click", function () {
+                if (confirm(msg) == true) {
+                    $.ajax({
+                        type: "DELETE",    //请求类型
+                        url: "/user/logout",    //请求地址和参数    GET请求才把参数写在这里
+                        success: function (data) {   //请求成功后执行的函数res是返回的值
+                            if (data["code"] == 0) {//根据返回值进行跳转
+                                window.location.href = '/index.html';
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    <script>
+        $(function () {
+            var logout = $("#examineeSearch").val("");
+            $("#searcheName").on("click", function () {
+                var logout = $("#examineeSearch").val();
+                if (logout != "") {
+                    alert("暂未做处理...")
+                } else {
+                    $.ajax({
+                        type: "GET",    //请求类型
+                        url: '/item_bank/item_list?question_type=&question_name=',    //请求地址和参数    GET请求才把参数写在这里
+                        //服务器返回的数据类型
+                        dataType: 'json',
+                        success: function (data) {   //请求成功后执行的函数res是返回的值
+                            //获取需要的数据
+                            var group = data["data"];
+                            var list = group["list"];
+                            //放入页面的容器显示
+
+                            //拼接字符串
+                            var str = '';
+                            //对数据做遍历，拼接到页面显示
+                            //对数据做遍历，拼接到页面显示
+                            for (var i = 0; i < list.length; i++) {
+                                str += '<tr id="examineeList">' +
+                                    '<td><input type="checkbox" name="user"></td>' +
+                                    '<th id="row">' + list[i].id + '</th>' +
+                                    '<td id="usernameTd">' + list[i].questionType + '</td>' +
+                                    '<td id="segmentTd">' + list[i].questionContent + '</td>' +
+                                    '<td id="passwordTd">' + list[i].answer + '</td>' +
+                                    '<td id="A">' + list[i].A + '</td>' +
+                                    '<td id="B">' + list[i].B + '</td>' +
+                                    '<td id="C">' + list[i].C + '</td>' +
+                                    '</tr>';
+                            }
+
+                            //放入页面的容器显示
+                            $('#examTb').html(str);
+                        }
+                    });
+                }
+            });
+
+            $("#single").on("click", function () {
+                $.ajax({
+                    type: "GET",
+                    url: '/item_bank/item_list?question_type=singleSelection&question_name=',
+                    dataType: 'json',
+                    success: function (data) {
+                        var list = data.data.list;
+                        var str = '';
+                        for (var i = 0; i < list.length; i++) {
+                            str += '<tr id="examineeList">' +
+                                '<td><input type="checkbox" name="user"></td>' +
+                                '<th id="row">' + list[i].id + '</th>' +
+                                '<td id="usernameTd">' + list[i].questionType + '</td>' +
+                                '<td id="segmentTd">' + list[i].questionContent + '</td>' +
+                                '<td id="passwordTd">' + list[i].answer + '</td>' +
+                                '<td id="A">' + list[i].A + '</td>' +
+                                '<td id="B">' + list[i].B + '</td>' +
+                                '<td id="C">' + list[i].C + '</td>' +
+                                '</tr>';
+                        }
+                        //放入页面的容器显示
+                        $('#examTb').html(str);
+                    }
+                });
+            });
+            $("#multi").on("click", function () {
+                $.ajax({
+                    type: "GET",
+                    url: '/item_bank/item_list?question_type=multiSelection&question_name=',
+                    dataType: 'json',
+                    success: function (data) {
+                        var list = data.data.list;
+                        var str = '';
+                        for (var i = 0; i < list.length; i++) {
+                            str += '<tr id="examineeList">' +
+                                '<td><input type="checkbox" name="user"></td>' +
+                                '<th id="row">' + list[i].id + '</th>' +
+                                '<td id="usernameTd">' + list[i].questionType + '</td>' +
+                                '<td id="segmentTd">' + list[i].questionContent + '</td>' +
+                                '<td id="passwordTd">' + list[i].answer + '</td>' +
+                                '<td id="A">' + list[i].A + '</td>' +
+                                '<td id="B">' + list[i].B + '</td>' +
+                                '<td id="C">' + list[i].C + '</td>' +
+                                '</tr>';
+                        }
+                        //放入页面的容器显示
+                        $('#examTb').html(str);
+                    }
+                });
+            });
+            $("#judge").on("click", function () {
+                $.ajax({
+                    type: "GET",
+                    url: '/item_bank/item_list?question_type=judge&question_name=',
+                    dataType: 'json',
+                    success: function (data) {
+                        var list = data.data.list;
+                        var str = '';
+                        for (var i = 0; i < list.length; i++) {
+                            str += '<tr id="examineeList">' +
+                                '<td><input type="checkbox" name="user"></td>' +
+                                '<th id="row">' + list[i].id + '</th>' +
+                                '<td id="usernameTd">' + list[i].questionType + '</td>' +
+                                '<td id="segmentTd">' + list[i].questionContent + '</td>' +
+                                '<td id="passwordTd">' + list[i].answer + '</td>' +
+                                '<td id="A">' + list[i].A + '</td>' +
+                                '<td id="B">' + list[i].B + '</td>' +
+                                '<td id="C">' + list[i].C + '</td>' +
+                                '</tr>';
+                        }
+                        //放入页面的容器显示
+                        $('#examTb').html(str);
+                    }
+                });
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        function disp_prompt() {
+            var number = prompt("请输入您要增加考生数量", "2");
+            if (number != null && number != "") {
+                alert("您将要" + number + "个账号...");
+                $.ajax({
+                    type: "POST",    //请求类型
+                    url: "/examinee_bank/examinee_list",    //请求地址和参数    GET请求才把参数写在这里
+                    data: {number: number},
+                    success: function (data) {   //请求成功后执行的函数res是返回的值
+                        alert("恭喜您！创建成功！");
+                        if (data.code == 0) {//根据返回值进行跳转
+                            alert(data.message);
+                            window.open("tables.html", "_blank");
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+
+
+    <script>
+        $.ajax({
+            //请求方式
+            type: 'get',
+
+            //发送请求的地址
+            //我这里的地址是不需要传数据的，所以没有拼接参数
+            url: '/item_bank/item_list?question_type=&question_name=',
+
+            //服务器返回的数据类型
+            dataType: 'json',
+
+            //请求成功的处理
+            success: function (data) {
+                //获取需要的数据
+                var group = data["data"];
+                var list = group["list"];
+                var user = list[0].username;
+                var pageSize = data.data.pageSize;
+                //放入页面的容器显示
+
+                //拼接字符串
+                var str = '';
+                //对数据做遍历，拼接到页面显示
+                for (var i = 0; i < list.length; i++) {
+                    str += '<tr id="examineeList">' +
+                        '<td><input type="checkbox" name="user"></td>' +
+                        '<th id="row">' + list[i].id + '</th>' +
+                        '<td id="usernameTd">' + list[i].questionType + '</td>' +
+                        '<td id="segmentTd">' + list[i].questionContent + '</td>' +
+                        '<td id="passwordTd">' + list[i].answer + '</td>' +
+                        '<td id="A">' + list[i].A + '</td>' +
+                        '<td id="B">' + list[i].B + '</td>' +
+                        '<td id="C">' + list[i].C + '</td>' +
+                        '</tr>';
+                }
+
+                //放入页面的容器显示
+                $('#examTb').html(str);
+                var total = data.data.total;
+                $("#total").html("共" + total + "条记录");
+            },
+            //请求失败的处理
+            error: function (jqXHR) {
+                alert("失败");
+                console.log(jqXHR);
+            }
+        });
+    </script>
+
+
+    <!--    上一页下一页-->
+    <script>
+        $(function () {
+            var to = null;
+            // var logout = $("#examineeSearch").val("");
+            $("#pre").on("click", function () {
+                $.ajax({
+                    type: "GET",    //请求类型
+                    url: "/examinee_bank/examinee_list?examinee_name=&page=&pageSize",    //请求地址和参数    GET请求才把参数写在这里
+                    //服务器返回的数据类型
+                    dataType: 'json',
+                    success: function (data) {
+                        //放入页面的容器显示
+
+                        //获取需要的数据
+                        var group = data["data"];
+                        var list = group["list"];
+                        var pageSize = data.data.pageSize;
+                        to = data.data.total;
+                        //拼接字符串
+                        var str = '';
+                        //对数据做遍历，拼接到页面显示
+                        for (var i = 0; i < pageSize; i++) {
+                            str += '<tr id="examineeList">' +
+                                '<td><input type="checkbox" name="user"></td>' +
+                                '<th id="row">' + list[i].id + '</th>' +
+                                '<td id="usernameTd">' + list[i].username + '</td>' +
+                                '<td id="segmentTd">' + list[i].segment + '</td>' +
+                                '<td id="passwordTd">' + list[i].password + '</td>' +
+                                '</tr>';
+                        }
+
+                        //放入页面的容器显示
+                        $('#examTb').html(str);
+                    }
+
+                });
+            });
+
+            $("#suf").on("click", function () {
+                $.ajax({
+                    type: "GET",    //请求类型
+                    url: "/examinee_bank/examinee_list?examinee_name=&page=&pageSize=" + to,    //请求地址和参数    GET请求才把参数写在这里
+                    //服务器返回的数据类型
+                    dataType: 'json',
+                    success: function (data) {
+                        //放入页面的容器显示
+
+                        //获取需要的数据
+                        var group = data["data"];
+                        var list = group["list"];
+                        var total = data.data.total;
+                        var pageSize = data.data.pageSize;
+                        var tStart = total - 5;
+                        //拼接字符串
+                        var str = '';
+                        //对数据做遍历，拼接到页面显示
+                        for (var i = tStart; i < total; i++) {
+                            str += '<tr id="examineeList">' +
+                                '<td><input type="checkbox" name="user"></td>' +
+                                '<th id="row">' + list[i].id + '</th>' +
+                                '<td id="usernameTd">' + list[i].username + '</td>' +
+                                '<td id="segmentTd">' + list[i].segment + '</td>' +
+                                '<td id="passwordTd">' + list[i].password + '</td>' +
+                                '</tr>';
+                        }
+
+                        //放入页面的容器显示
+                        $('#examTb').html(str);
+                    }
+
+                });
+            });
+
+            $("#all").on("click", function () {
+                $.ajax({
+                    type: "GET",    //请求类型
+                    url: "/examinee_bank/examinee_list?examinee_name=&page=&pageSize=" + to,    //请求地址和参数    GET请求才把参数写在这里
+                    //服务器返回的数据类型
+                    dataType: 'json',
+                    success: function (data) {
+                        //放入页面的容器显示
+
+                        //获取需要的数据
+                        var group = data["data"];
+                        var list = group["list"];
+                        var total = data.data.total;
+                        var pageSize = data.data.pageSize;
+                        var tStart = total - 5;
+                        //拼接字符串
+                        var str = '';
+                        //对数据做遍历，拼接到页面显示
+                        for (var i = 0; i < total; i++) {
+                            str += '<tr id="examineeList">' +
+                                '<td><input type="checkbox" name="user"></td>' +
+                                '<th id="row">' + list[i].id + '</th>' +
+                                '<td id="usernameTd">' + list[i].username + '</td>' +
+                                '<td id="segmentTd">' + list[i].segment + '</td>' +
+                                '<td id="passwordTd">' + list[i].password + '</td>' +
+                                '</tr>';
+                        }
+
+                        //放入页面的容器显示
+                        $('#examTb').html(str);
+                    }
+
+                });
+            });
+
+
+        });
+    </script>
+
+
+    <style>
+
+        .search {
+            width: 40%;
+            display: flex;
+            /*border: 1px solid red;*/
+        }
+
+        .search input {
+            float: left;
+        / / 左浮动 flex: 4;
+            height: 30px;
+            outline: none;
+            border: 1px solid #409eff;
+            box-sizing: border-box;
+        / / 盒子模型，怪异IE盒子模型，width = content + border * 2 + padding * 2 padding-left: 10 px;
+        }
+
+        .search button {
+            float: right;
+            flex: 1;
+            height: 30px;
+            background-color: #409eff;
+            color: white;
+            border-style: none;
+            outline: none;
+        }
+
+        .search button i {
+            font-style: normal;
+        }
+
+        .search button:hover {
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+<!-- Side Navbar -->
+<nav class="side-navbar">
+    <div class="side-navbar-wrapper">
+        <!-- Sidebar Header    -->
+        <div class="sidenav-header d-flex align-items-center justify-content-center">
+            <!-- User Info-->
+            <div class="sidenav-header-inner text-center"><img src="img/avatar-7.png" alt="person"
+                                                               class="img-fluid rounded-circle">
+                <h2 class="h5">管理员后台</h2><span></span>
+            </div>
+            <!-- Small Brand information, appears on minimized sidebar-->
+            <div class="sidenav-header-logo"><a href="index.html" class="brand-small text-center">
+                <strong>B</strong><strong class="text-primary">D</strong></a></div>
+        </div>
+        <!-- Sidebar Navigation Menus-->
+        <div class="main-menu">
+            <h5 class="sidenav-heading">基础</h5>
+            <ul id="side-main-menu" class="side-menu list-unstyled">
+                <li><a href="admin_index.html"> <i class="icon-home"></i>主页 </a></li>
+                <li></li>
+                <li><a href="charts.html"> <i class="fa fa-bar-chart"></i>工作人员库 </a></li>
+                <li class="active"><a href="tables.html" id="examinee"> <i class="icon-grid"></i>考生库 </a></li>
+                <li class="active"><a href="exam_tables.html" id="examinee2"> <i class="icon-grid"></i>试题库 </a></li>
+
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+<!--        <div class="admin-menu">-->
+<!--            <h5 class="sidenav-heading">权限</h5>-->
+<!--            <ul id="side-admin-menu" class="side-menu list-unstyled">-->
+<!--                <li><a href="#"> <i class="icon-screen"> </i>Demo</a></li>-->
+<!--                <li><a href="#"> <i class="icon-flask"> </i>Demo-->
+<!--                    <div class="badge badge-info">Special</div>-->
+<!--                </a></li>-->
+<!--                <li><a href=""> <i class="icon-flask"> </i>Demo</a></li>-->
+<!--                <li><a href=""> <i class="icon-picture"> </i>Demo</a></li>-->
+<!--            </ul>-->
+<!--        </div>-->
+    </div>
+</nav>
+<div class="page">
+    <!-- navbar-->
+    <header class="header">
+        <nav class="navbar">
+            <div class="container-fluid">
+                <div class="navbar-holder d-flex align-items-center justify-content-between">
+                    <div class="navbar-header"><a id="toggle-btn" href="#" class="menu-btn"><i
+                            class="icon-bars"> </i></a><a href="admin_index.html" class="navbar-brand">
+                        <div class="brand-text d-none d-md-inline-block">
+                            <span><strong>电力行业在线考试系统管理后台</strong> </span><strong class="text-primary"
+                                                                                 style="color: white"></strong></div>
+                    </a></div>
+                    <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
+                        <!-- Notifications dropdown-->
+                        <li class="nav-item dropdown"><a id="notifications" rel="nofollow" data-target="#" href="#"
+                                                         data-toggle="dropdown" aria-haspopup="true"
+                                                         aria-expanded="false" class="nav-link"><i
+                                class="fa fa-bell"></i><span class="badge badge-warning">12</span></a>
+                            <ul aria-labelledby="notifications" class="dropdown-menu">
+                                <li><a rel="nofollow" href="#" class="dropdown-item">
+                                    <div class="notification d-flex justify-content-between">
+                                        <div class="notification-content"><i class="fa fa-envelope"></i>You have 6 new
+                                            messages
+                                        </div>
+                                        <div class="notification-time">
+                                            <small>4 minutes ago</small>
+                                        </div>
+                                    </div>
+                                </a></li>
+                                <li><a rel="nofollow" href="#" class="dropdown-item">
+                                    <div class="notification d-flex justify-content-between">
+                                        <div class="notification-content"><i class="fa fa-twitter"></i>You have 2
+                                            followers
+                                        </div>
+                                        <div class="notification-time">
+                                            <small>4 minutes ago</small>
+                                        </div>
+                                    </div>
+                                </a></li>
+                                <li><a rel="nofollow" href="#" class="dropdown-item">
+                                    <div class="notification d-flex justify-content-between">
+                                        <div class="notification-content"><i class="fa fa-upload"></i>Server Rebooted
+                                        </div>
+                                        <div class="notification-time">
+                                            <small>4 minutes ago</small>
+                                        </div>
+                                    </div>
+                                </a></li>
+                                <li><a rel="nofollow" href="#" class="dropdown-item">
+                                    <div class="notification d-flex justify-content-between">
+                                        <div class="notification-content"><i class="fa fa-twitter"></i>You have 2
+                                            followers
+                                        </div>
+                                        <div class="notification-time">
+                                            <small>10 minutes ago</small>
+                                        </div>
+                                    </div>
+                                </a></li>
+                                <li><a rel="nofollow" href="#" class="dropdown-item all-notifications text-center">
+                                    <strong> <i class="fa fa-bell"></i>view all notifications </strong></a></li>
+                            </ul>
+                        </li>
+                        <!-- Messages dropdown-->
+                        <li class="nav-item dropdown"><a id="messages" rel="nofollow" data-target="#" href="#"
+                                                         data-toggle="dropdown" aria-haspopup="true"
+                                                         aria-expanded="false" class="nav-link"><i
+                                class="fa fa-envelope"></i><span class="badge badge-info">10</span></a>
+                            <ul aria-labelledby="notifications" class="dropdown-menu">
+                                <li><a rel="nofollow" href="#" class="dropdown-item d-flex">
+                                    <div class="msg-profile"><img src="img/avatar-1.jpg" alt="..."
+                                                                  class="img-fluid rounded-circle"></div>
+                                    <div class="msg-body">
+                                        <h3 class="h5">Jason Doe</h3><span>sent you a direct message</span>
+                                        <small>3 days ago at 7:58 pm - 10.06.2019</small>
+                                    </div>
+                                </a></li>
+                                <li><a rel="nofollow" href="#" class="dropdown-item d-flex">
+                                    <div class="msg-profile"><img src="img/avatar-2.jpg" alt="..."
+                                                                  class="img-fluid rounded-circle"></div>
+                                    <div class="msg-body">
+                                        <h3 class="h5">Frank Williams</h3><span>sent you a direct message</span>
+                                        <small>3 days ago at 7:58 pm - 10.06.2019</small>
+                                    </div>
+                                </a></li>
+                                <li><a rel="nofollow" href="#" class="dropdown-item d-flex">
+                                    <div class="msg-profile"><img src="img/avatar-3.jpg" alt="..."
+                                                                  class="img-fluid rounded-circle"></div>
+                                    <div class="msg-body">
+                                        <h3 class="h5">Ashley Wood</h3><span>sent you a direct message</span>
+                                        <small>3 days ago at 7:58 pm - 10.06.2019</small>
+                                    </div>
+                                </a></li>
+                                <li><a rel="nofollow" href="#" class="dropdown-item all-notifications text-center">
+                                    <strong> <i class="fa fa-envelope"></i>Read all messages </strong></a></li>
+                            </ul>
+                        </li>
+
+
+                        <!-- Log out-->
+                        <li class="nav-item"><a href="#" class="nav-link logout" id="admin_logout"> <span
+                                class="d-none d-sm-inline-block">退出</span><i class="fa fa-sign-out"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- Breadcrumb-->
+    <div class="breadcrumb-holder">
+        <div class="container-fluid">
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="admin_index.html">主页</a></li>
+                <li class="breadcrumb-item active">试题库</li>
+            </ul>
+        </div>
+    </div>
+    <section>
+        <div class="container-fluid">
+            <!-- Page Header-->
+            <header>
+                <h1 class="h3 display">试题库 </h1>
+            </header>
+
+            <div class="search">
+                <input type="text" placeholder="请输入试题名称" name="" id="examineeSearch" value=""/>
+                <button id="searcheName"><i>搜索</i></button>
+                &nbsp
+
+                <button id="single">单选</button>
+                &nbsp
+                <button id="multi">多选</button>
+                &nbsp
+                <button id="judge">判断</button>
+            </div>
+
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>试题列表</h4>
+
+                        </div>
+
+
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th><input type="checkbox" name="user" id="check"></th>
+                                        <th>id</th>
+                                        <th>类型</th>
+                                        <th>内容</th>
+                                        <th>答案</th>
+                                        <th>选项A</th>
+                                        <th>选项B</th>
+                                        <th>选项C</th>
+                                        <!--                                        <th>操作</th>-->
+                                    </tr>
+                                    </thead>
+                                    <tbody id="examTb">
+                                    <tr id="examineeList">
+                                        <td><input type="checkbox" name="user"></td>
+                                        <th id="row">1</th>
+                                        <td id="usernameTd">Mark</td>
+                                        <td id="segmentTd">Otto</td>
+                                        <td id="passwordTd">@mdo</td>
+                                        <td id="A">@mdo</td>
+                                        <td id="B">@mdo</td>
+                                        <td id="C">@mdo</td>
+
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div>
+                                <a href="#" style="text-decoration: none" id="pre">首页</a>
+                                <a href="#" style="text-decoration: none" id="up">上一页</a>
+
+                                <a href="#" style="text-decoration: none"> </a>
+                                <a href="#" style="text-decoration: none"> </a>
+                                <a href="#" style="text-decoration: none"> </a>
+                                <a href="#" style="text-decoration: none"> </a>
+                                <a href="#" style="text-decoration: none"> </a>
+
+                                <a href="#" style="text-decoration: none" id="down">下一页</a>
+                                <a href="#" style="text-decoration: none" id="suf">末页</a>
+                                <a href="#" style="text-decoration: none" id="total">共6条记录</a>
+                                第<input type="text" style="width: 50px">页
+                                <button>确定</button>
+                                <a href="#" style="text-decoration: none" id="all">查询所有</a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input id="add" type="button" name="number" onclick="disp_prompt()" value="增加"/>
+                                <button id="delete">删除</button>
+                                <button id="update">修改</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+                    <p>Copyright @2020 电力行业安全知识在线考试系统 | MiaChen毕业设计</p>
+                </div>
+                <div class="col-sm-6 text-right">
+
+
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+<!-- JavaScript files-->
+<script src="https://www.jq22.com/jquery/jquery-1.10.2.js"></script>
+<script src="vendor/popper.js/umd/popper.min.js"></script>
+<script src="https://www.jq22.com/jquery/bootstrap-4.2.1.js"></script>
+<script src="js/grasp_mobile_progress_circle-1.0.0.min.js"></script>
+<script src="vendor/jquery.cookie/jquery.cookie.js"></script>
+<script src="vendor/chart.js/Chart.min.js"></script>
+<script src="vendor/jquery-validation/jquery.validate.min.js"></script>
+<script src="vendor/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+<!-- Main File-->
+<script src="js/front.js"></script>
+</body>
+<!--    全选-->
+<script>
+    document.getElementById("check").onclick = function () {
+        var checked = document.getElementById("check").checked;
+        var checkson = document.getElementsByName("user");
+        if (checked) {
+            for (var i = 0; i < checkson.length; i++) {
+                checkson[i].checked = true;
+            }
+        } else {
+            for (var i = 0; i < checkson.length; i++) {
+                checkson[i].checked = false;
+            }
+        }
+    }
+</script>
+</html>

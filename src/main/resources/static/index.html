@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Lowin</title>
+    <link rel="stylesheet" href="auth.css">
+    <script src="static/js/jquery.js"></script>
+    <script>
+        $(function () {
+            $("#loginbtn").on("click", function () {
+                var username = $("#username").val();	//拿到输入框的值
+                var passowrd = $("#password").val();	//拿到输入框的值
+                $.ajax({
+                    type: "POST",    //请求类型
+                    url: "/user/login",    //请求地址和参数    GET请求才把参数写在这里
+                    data: {username: username, password: passowrd},
+                    success: function (data) {   //请求成功后执行的函数res是返回的值
+                        if (data["code"]==0) {//根据返回值进行跳转
+                            window.location.href = '/courses/index.html';
+                        }
+                        else{
+                            window.alert(data["code"]+"-"+data["message"])
+                        }
+                    }
+                });
+            });
+        });
+
+    </script>
+</head>
+
+<body>
+<div class="lowin">
+    <div class="lowin-brand">
+        <!--			<img src="kodinger.jpg" alt="logo">-->
+        <a href="courses/index.html"><img src="img/gonren.png"/></a>
+    </div>
+    <div class="lowin-wrapper">
+        <div class="lowin-box lowin-login">
+            <div class="lowin-box-inner">
+                <p><font size="5">电力行业在线考试系统</font></p>
+                <div class="lowin-group">
+                    <input type="input" name="username" class="lowin-input" id="username" placeholder="用户名">
+                </div>
+                <div class="lowin-group password-group">
+                    <input type="password" name="password" class="lowin-input" id="password" placeholder="密码">
+                </div>
+                <button type="submit" class="lowin-btn login-btn" id="loginbtn">
+                    登录
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<div style="height: 100%">
+    <footer class="lowin-footer">
+        Copyright @2020 电力行业安全知识在线考试系统 | MiaChen毕业设计
+    </footer>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+server:
+  #配置端口
+  port: 8801
+#  servlet:
+#    context-path: /my
+spring:
+  #配置数据库信息
+  datasource:
+    #url: jdbc:mysql://120.26.176.142:3306/electricexam?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT
+    url: jdbc:mysql://127.0.0.1:3306/electricexam?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT
+    username: root
+    password: 771003
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  #配置mvc访问路径
+  mvc:
+    static-path-pattern: /**
+
+    view:
+      suffix: .html
+  servlet:
+    multipart:
+     max-file-size: 200MB
+     max-request-size: 200MB
+#bybatis分页插件配置
+pagehelper:
+  helper-dialect: mysql #数据库
+  reasonable: false
+  support-methods-arguments: true
+  params: count=countSql
+
+
+
+
